@@ -1,12 +1,16 @@
+import Navbar from "@/components/shared/navbar";
+import Sidebar from "@/components/shared/sidebar";
+import { ChildProps } from "@/types";
 import React from "react";
-import { ChildProps } from "../../types";
 
 const AuthLayout = ({ children }: ChildProps) => {
   return (
     <div className="relative">
-      <div>Navbar</div>
-      <div>Sidebar</div>
-      {children}
+      <Navbar />
+      <Sidebar />
+      <main className="flex items-center justify-center w-full h-[90vh] z-20 relative">
+        {children}
+      </main>
     </div>
   );
 };
