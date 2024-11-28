@@ -26,10 +26,12 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const FolderModal = () => {
   const { isOpen, onClose } = useFolder();
   const { user } = useUser();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,10 +43,11 @@ const FolderModal = () => {
       name: values.name,
       timestamp: serverTimestamp(),
       uid: user?.id,
-      isArhive: false,
+      isArchive: false,
     }).then(() => {
       form.reset();
       onClose();
+      router.refresh();
     });
 
     toast.promise(promise, {
@@ -56,7 +59,6 @@ const FolderModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogTrigger>Open</DialogTrigger>
       <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle>New folder</DialogTitle>
