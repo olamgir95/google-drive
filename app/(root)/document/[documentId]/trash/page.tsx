@@ -10,9 +10,10 @@ import {
 } from "@/components/ui/table";
 import { db } from "@/lib/firebase";
 import { DocIdProps } from "@/types";
-import { auth } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import React from "react";
+
 const getFiles = async (folderId: string, uid: string) => {
   let files: any[] = [];
   const q = query(
@@ -24,11 +25,14 @@ const getFiles = async (folderId: string, uid: string) => {
   querySnapshot.forEach((doc) => {
     files.push({ ...doc.data(), id: doc.id });
   });
+
   return files;
 };
+
 const DocumentTrashPage = async ({ params }: DocIdProps) => {
-  const { userId } = auth();
-  const files = await getFiles(params.documentId, userId!);
+  const user = await currentUser();
+  const files = await getFiles(params.documentId, user?.id!);
+
   return (
     <>
       <Header label="Trash" isDocumentPage isHome={false} />
@@ -45,7 +49,10 @@ const DocumentTrashPage = async ({ params }: DocIdProps) => {
           </TableHeader>
           <TableBody>
             {files.map((folder) => (
-              <TrashItem key={folder.id} item={folder} />
+              <TrashItem
+                key={folder.id}
+                item={JSON.parse(JSON.stringify(folder))}
+              />
             ))}
           </TableBody>
         </Table>
@@ -53,4 +60,5 @@ const DocumentTrashPage = async ({ params }: DocIdProps) => {
     </>
   );
 };
+
 export default DocumentTrashPage;

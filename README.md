@@ -1,8 +1,8 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center" id="title">NextJS Firebase Stripe Clerk - Google Drive Clone Project</h1>
 
-## Getting Started
+<p align="center"><img src="https://media.graphassets.com/u1mIG68sT6Gz79zhMurn" alt="project-image"></p>
 
-First, run the development server:
+<p id="description">Embark on an exciting journey of building a Google Drive clone with the Next.js framework Firebase for backend functionality Stripe for payment integration and Clerk for authentication. This comprehensive course is designed for web developers eager to enhance their skills by creating a feature-rich cloud storage application that mirrors the functionality of Google Drive.</p>
 
 ```bash
 npm run dev

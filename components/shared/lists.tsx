@@ -1,3 +1,5 @@
+"use client";
+
 import { IFolderAndFile } from "@/types";
 import React from "react";
 import {
@@ -9,8 +11,8 @@ import {
   TableRow,
 } from "../ui/table";
 import ListItem from "./list-item";
-import SuggestCard from "../card/suggest-card";
 import { useLayout } from "@/hooks/use-layout";
+import SuggestCard from "../card/suggest-card";
 import Empty from "./empty";
 
 interface ListsProps {
@@ -19,8 +21,6 @@ interface ListsProps {
 }
 
 const Lists = ({ files, folders }: ListsProps) => {
-  // console.log("folder", files);
-
   const { layout } = useLayout();
 
   return layout === "list" ? (
@@ -61,6 +61,7 @@ const Lists = ({ files, folders }: ListsProps) => {
       {files.length === 0 && folders.length === 0 ? null : (
         <>
           <div className="text-sm opacity-70 mt-6">Folders</div>
+
           <Table className="mt-4">
             <TableHeader>
               <TableRow>

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
@@ -21,6 +23,7 @@ interface HeaderProps {
 const Header = ({ label, isHome, isDocument, isDocumentPage }: HeaderProps) => {
   const { setLayout, layout } = useLayout();
   const router = useRouter();
+
   return (
     <div className="w-full flex items-center justify-between">
       {isHome ? (
@@ -71,12 +74,6 @@ const Header = ({ label, isHome, isDocument, isDocumentPage }: HeaderProps) => {
               <LayoutPanelTop className="w-5 h-5" />
             </div>
           )}
-          <div
-            role="button"
-            className="p-2 hover:bg-secondary rounded-full transition"
-          >
-            <Info className="w-5 h-5" />
-          </div>
         </div>
       )}
     </div>

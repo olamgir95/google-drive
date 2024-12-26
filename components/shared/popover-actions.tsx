@@ -14,10 +14,10 @@ import {
 import { db, storage } from "@/lib/firebase";
 import { useUser } from "@clerk/nextjs";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { url } from "inspector";
 import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSubscription } from "@/hooks/use-subscribtion";
 
 const PopoverActions = () => {
   const inputRef = useRef<ElementRef<"input">>(null);
@@ -25,6 +25,7 @@ const PopoverActions = () => {
   const { user } = useUser();
   const router = useRouter();
   const { documentId } = useParams();
+  const { setTotalStorage, totalStorage } = useSubscription();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -42,9 +43,11 @@ const PopoverActions = () => {
     }
 
     const folderId = documentId as string;
+
     const collectionRefs = !documentId
       ? collection(db, "files")
       : collection(db, "folders", folderId, "files");
+
     const promise = addDoc(collectionRefs, {
       name: file.name,
       type: file.type,
@@ -52,21 +55,41 @@ const PopoverActions = () => {
       uid: user?.id,
       timestamp: serverTimestamp(),
       isArchive: false,
-    }).then((docs) => {
-      const refs = documentId
-        ? ref(storage, `files/${folderId}/${docs.id}/image`)
-        : ref(storage, `files/${docs.id}/image`);
-      uploadString(refs, image, "data_url").then(() => {
-        getDownloadURL(refs).then((url) => {
-          const docRefs = documentId
-            ? doc(db, "folders", folderId, "files", docs.id)
-            : doc(db, "files", docs.id);
-          updateDoc(docRefs, {
-            image: url,
-          }).then(() => router.refresh());
+      isDocument: false,
+    })
+      .then((docs) => {
+        if (documentId) {
+          addDoc(collection(db, "files"), {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            uid: user?.id,
+            timestamp: serverTimestamp(),
+            isArchive: false,
+            isDocument: true,
+          });
+        }
+
+        const refs = documentId
+          ? ref(storage, `files/${folderId}/${docs.id}/image`)
+          : ref(storage, `files/${docs.id}/image`);
+
+        uploadString(refs, image, "data_url").then(() => {
+          getDownloadURL(refs).then((url) => {
+            const docRefs = documentId
+              ? doc(db, "folders", folderId, "files", docs.id)
+              : doc(db, "files", docs.id);
+
+            updateDoc(docRefs, {
+              image: url,
+            }).then(() => {
+              router.refresh();
+              setTotalStorage(totalStorage + file.size);
+            });
+          });
         });
-      });
-    });
+      })
+      .catch((e) => console.log(e));
 
     toast.promise(promise, {
       loading: "Loading...",
@@ -74,6 +97,7 @@ const PopoverActions = () => {
       error: "Error uploading file",
     });
   };
+
   return (
     <>
       {!documentId && (
@@ -122,6 +146,7 @@ const PopoverActions = () => {
           onChange={onChange}
         />
       </label>
+
       {documentId && (
         <>
           <Separator />

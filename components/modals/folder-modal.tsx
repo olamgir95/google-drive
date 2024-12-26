@@ -18,6 +18,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "../ui/form";
 import { Button } from "../ui/button";
@@ -44,6 +45,7 @@ const FolderModal = () => {
       timestamp: serverTimestamp(),
       uid: user?.id,
       isArchive: false,
+      isDocument: false,
     }).then(() => {
       form.reset();
       onClose();

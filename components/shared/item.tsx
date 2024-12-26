@@ -1,4 +1,5 @@
 "use client";
+
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -14,6 +15,7 @@ const Item = ({ icon: Icon, label, path }: ItemProps) => {
   const pathname = usePathname();
 
   const isActive = pathname === path;
+
   return (
     <div
       className={cn(

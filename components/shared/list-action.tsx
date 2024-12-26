@@ -23,11 +23,13 @@ interface ListActionProps {
 const ListAction = ({ item, onStartEditing }: ListActionProps) => {
   const { refresh } = useRouter();
   const { documentId } = useParams();
+
   const folderId = documentId as string;
   const type = item.size ? "files" : "folders";
   const ref = documentId
     ? doc(db, "folders", folderId, "files", item.id)
     : doc(db, type, item.id);
+
   const onDelete = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
 
@@ -124,6 +126,7 @@ const ListAction = ({ item, onStartEditing }: ListActionProps) => {
           <div
             role="button"
             className="p-2 hover:bg-secondary rounded-full transition"
+            onClick={(e) => e.stopPropagation()}
           >
             <MoreVertical className="h-4 w-4" />
           </div>
