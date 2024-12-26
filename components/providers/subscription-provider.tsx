@@ -15,10 +15,15 @@ const SubscriptionProvider = ({ children }: ChildProps) => {
   useEffect(() => {
     const getData = async () => {
       setIsLoading(true);
-      const { data } = await axios.get(
-        `/api/subscription?email=${user?.emailAddresses[0].emailAddress}`
-      );
-      setSubscription(data);
+      try {
+        const { data } = await axios.get(
+            `/api/subscription?email=${user?.emailAddresses[0].emailAddress}`
+        );
+        setSubscription(data);
+    } catch (error) {
+        console.error('Error fetching subscription data:', error);
+        setIsLoading(false);
+    }
       let files: any[] = [];
       const q = query(
         collection(db, "files"),
