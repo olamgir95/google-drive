@@ -18,7 +18,7 @@ const SettingsPage = () => {
   const { resolvedTheme } = useTheme();
 
   const onSubmit = () => {
-    const priceId = "price_1QSCvf4IqGSzSUOJP2bu6MwJ";
+    const priceId = "price_1OK5jiL7w2jHXlsSaWtc7yQI";
     const promise = axios
       .post("/api/subscription", {
         email: user?.emailAddresses[0].emailAddress,
