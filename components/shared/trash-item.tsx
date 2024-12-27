@@ -53,10 +53,24 @@ const TrashItem = ({ item }: TrashItemProps) => {
     }
 
     if (type === "files") {
-      const promise = deleteObject(ref(storage, item.image)).then(() => {
-        deleteDoc(refs).then(() => refresh());
+      console.log("item", item); // Log the full item
+      console.log("File path:", item.image); // Log the file path
+    
+      // Ensure `item.image` contains a valid file path
+      if (!item.image) {
+        console.error("Invalid file path");
+        toast.error("File path is invalid");
+        return;
+      }
+    
+      const fileRef = ref(storage, item.image); // Correctly reference the file
+    
+      // Perform delete operation
+      const promise = deleteObject(fileRef).then(() => {
+        // After deleting the file in Storage, delete the Firestore document
+        return deleteDoc(refs).then(() => refresh());
       });
-
+    
       toast.promise(promise, {
         loading: "Loading...",
         success: "Deleted!",
